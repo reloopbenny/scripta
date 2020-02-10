@@ -33,7 +33,7 @@ angular.module('Scripta.controllers', [])
   $scope.sync = function(action,data,alert) {
     action = action || 'settings';
     data = data || 'load';
-    $http.get('f_settings.php?'+action+'='+angular.toJson(data)).success(function(d){
+    $http.get('f_settings.php?'+action+'='+angular.toJson(data)).success(function(d){    
       if(d.info){
         angular.forEach(d.info, function(v,k) {Alertify.log.create(v.type, v.text);});
       }
@@ -150,7 +150,7 @@ angular.module('Scripta.controllers', [])
 })
 
 
-.controller('CtrlStatus', function($scope,$http) {
+.controller('CtrlStatus', function($scope,$http,$timeout) {
   $scope.status.extra=true;
   $scope.num=0;
 
@@ -165,9 +165,47 @@ angular.module('Scripta.controllers', [])
       }
       $scope.num++;
     }).error(function(){
-      Alertify.log.error("Update graph ended in error: https enabled?");
+      Alertify.log.error("Update graph ended in error?");
     });
-  }
+  } 
+  
+  $scope.graphReset = function() {
+  	$http.get('f_miner.php?command=restart').success(function(d){
+      if(d.info){
+        angular.forEach(d.info, function(v,k) {Alertify.log.create(v.type, v.text);});
+      }
+      $scope.tick();
+    });
+  	
+    $http.get('f_graphReset.php').success(function(d){
+		
+      if(d){
+        Alertify.log.success("Graphs reset");
+      } 
+      else{
+        Alertify.log.error("Reset graph ended in error");
+      }
+      $scope.num++;
+    }).error(function(){
+      Alertify.log.error("Reset graph ended in error?");
+    });
+  } 
+  
+  $scope.cgminer = function(command,parameter) {
+    $scope.tick();
+
+    var execute = function(){
+        $http.get('f_miner.php?command='+(command || 'summary')+'&parameter='+parameter).success(function(d){
+            if(d.info){
+                angular.forEach(d.info, function(v,k) {Alertify.log.create(v.type, v.text);});
+            }
+            $scope.tick();
+        });
+    }
+    $timeout(execute, 1000);
+  };
+
+
 })
 
 
@@ -190,7 +228,7 @@ angular.module('Scripta.controllers', [])
     });
   }
 
-  $scope.bfgminer = function(command,parameter) {
+  $scope.cgminer = function(command,parameter) {
     $scope.tick();
 
     var execute = function(){
@@ -204,7 +242,7 @@ angular.module('Scripta.controllers', [])
     $timeout(execute, 1000);
   };
 
- $scope.bfgminerHardCtl = function(command) {
+ $scope.cgminerHardCtl = function(command) {
     $scope.tick();
 
     var execute = function(){
@@ -266,12 +304,20 @@ angular.module('Scripta.controllers', [])
     $scope.sync('options',0,1);
     $scope.optionForm.$setPristine();
   };
+
+  $scope.filterOption = function(){
+      return function(option) {
+          return option.key.indexOf("api") == -1;
+      }
+  }
 })
 
 
 .controller('CtrlSettings', function($scope) {
   $scope.status.extra=true;
 })
+
+
 
 
 .controller('CtrlBackup', function($scope,$http,$timeout) {
@@ -281,6 +327,7 @@ angular.module('Scripta.controllers', [])
   $scope.backups = [];
   $scope.restoring = 0;
   $scope.items = [
+  {selected:true,name:'etc/miner.conf'},
   {selected:true,name:'etc/scripta.conf'},
   {selected:true,name:'etc/miner.pools.json'},
   {selected:true,name:'etc/miner.options.json'}
@@ -342,6 +389,15 @@ angular.module('Scripta.controllers', [])
       $scope.syncDelay(600,'pools');
       $scope.syncDelay(900,'options');
     });
+    
+    var restart = function() {
+      $http.get('f_miner.php?command=restart').success(function(d){
+        if(d.info){
+          angular.forEach(d.info, function(v,k) {Alertify.log.create(v.type, v.text);});
+        }
+      });
+    }
+    $timeout(restart, 900);    
   };
 
   $scope.reload = function(wait) {
@@ -358,6 +414,7 @@ angular.module('Scripta.controllers', [])
   };
   $scope.reload();
 });
+
 
 
 function GetDateTime() {

@@ -1,0 +1,14 @@
+[
+    {
+        "key": "api-port",
+        "value": "4028"
+    },
+    {
+        "key": "api-allow",
+        "value": "W:127.0.0.1,W:192.168.0.0/16"
+    },
+    {
+        "key": "baikal-fan",
+        "value": "100"
+    }
+]

@@ -6,13 +6,13 @@ if ( !isset($_SESSION['_logged_']) || $_SESSION['_logged_'] === false ) {
 	die();
 }
 
-include('inc/ChromePhp.php');
-
 /*
 f_settings syncs settings in different files and always returns new state
 returns settings and ['date']
 */
 header('Content-type: application/json');
+include('inc/cgminer.inc.php');
+include('inc/host.inc.php');
 $configFolder='/opt/scripta/etc/';
 $configScripta=$configFolder.'scripta.conf';
 $configUipwd=$configFolder.'uipasswd';
@@ -26,7 +26,9 @@ if (isset($_REQUEST['pass'])) {
   $pass=json_decode($_REQUEST['pass']);
   if (strlen($pass) > 0) {
     file_put_contents($configUipwd,'scripta:' . md5($pass) );
-    $r['info'][]=array('type' => 'success', 'text' => 'Web password saved');
+    // also change linux password
+     $r = hostHardCtl(2,$_REQUEST['pass']);
+    $r['info'][]=array('type' => 'success', 'text' => 'Web password saved');    
   }
 }
 
@@ -50,45 +52,57 @@ elseif (!empty($_REQUEST['settings'])) {
 
   if(isset($r['data']['userTimezone'])){
     date_default_timezone_set($r['data']['userTimezone']);
-    $r['data']['date'] = date('Y-m-d H:i:s');
+    $r['data']['date'] = date('Y-m-d H:i:s');       
+    exec('sudo cp -f /usr/share/zoneinfo/'.$r['data']['userTimezone'].' /etc/localtime');
   }
 }
 
 // Manage pools
 elseif (!empty($_REQUEST['pools'])) {
   $newdata   = json_decode($_REQUEST['pools'], true);
+
   $r['data'] = json_decode(@file_get_contents($configPools), true);
-    
   foreach ($r['data'] as $id => $p) 
   { 
-    $r['data'][$id]['url'] = str_replace('stratum tcp','stratum+tcp',$p['url']);
+    $r['data'][$id]['user'] = str_replace('/ ','/+',$p['user']);
+    $r['data'][$id]['url']  = str_replace('stratum tcp','stratum+tcp',$p['url']);
+    if($r['data'][$id]['extranonce'] == "true") {
+      $r['data'][$id]['extranonce'] = true;
+    }
   }
   $m=0;
   foreach ($newdata as $id => $p) 
   { 
-    $newdata[$id]['url'] = str_replace('stratum tcp','stratum+tcp',$p['url']);
+    $newdata[$id]['user'] = str_replace('/ ','/+',$p['user']);
+    $newdata[$id]['url']  = str_replace('stratum tcp','stratum+tcp',$p['url']);
     if($p['prio'] > $m) $m=$p['prio'];
   }
-
-  ChromePhp::log($newdata);    
-  ChromePhp::log($m);       
-    
-  if($m>0){
-    $pl=array();
-    for ($pp = 0; $pp <= $m; $pp++) {      
-      foreach ($newdata as $id => $p){
-        if($p['prio'] == $pp) $pl[]=$newdata[$id];
-      }
-    }
-    $newdata = $pl;
-  }      
-
+  
+  if(is_array($newdata)){
+      //var_dump($newdata);
+      usort($newdata,'cmp');
+      //var_dump($newdata);
+  }else{
+      usort($r['data'],'cmp');
+  }
+  //
   // Overwrite current with new pools
   if(!empty($newdata)&&is_array($newdata)){
-    file_put_contents($configPools, json_encode($newdata, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $savedata = $newdata;
+    foreach ($savedata as $id => $p)
+    {
+      if($savedata[$id]['extranonce'] == true) {
+        $savedata[$id]['extranonce']  = "true";
+      }
+    }
+
+    file_put_contents($configPools, json_encode($savedata, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     minerConfigGenerate();
     $r['data']=$newdata;
+
     $r['info'][]=array('type' => 'success', 'text' => 'Pools config saved');
+    cgminer('restart');    
+    $r['info'][]=array('type' => 'info', 'text' => 'Miner: restart');
   }
   // Load current settings
   elseif(!empty($r['data'])&&is_array($r['data'])){
@@ -112,6 +126,8 @@ elseif (!empty($_REQUEST['options'])) {
     minerConfigGenerate();
     $r['data']=$newdata;
     $r['info'][]=array('type' => 'success', 'text' => 'Miner options saved');
+    cgminer('restart');    
+    $r['info'][]=array('type' => 'info', 'text' => 'Miner: restart');
   }
   // Load current settings
   elseif(!empty($r['data'])&&is_array($r['data'])){
@@ -143,10 +159,18 @@ function minerConfigGenerate(){
   // Angular objects ==> miner
   // {key:k,value:v} ==> {k:v}
   foreach ($options as $o) {
-    $miner[$o['key']]=$o['value'];
+    if ($o['value'] == "true") {
+      $o['value'] = true;
+    }
+    $miner[$o['key']]=$o['value'];    
   }
 
   $miner['pools']= json_decode(@file_get_contents($configPools), true);
   file_put_contents($configMiner, json_encode($miner, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 }
+
+function cmp($a, $b) {
+    return $a["priority"] - $b["priority"];
+}
+
 ?>

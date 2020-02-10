@@ -8,16 +8,18 @@ include('inc/functions.inc.php');
 
 
 
-$return = bfgminer("summary", "");
+$return = cgminer("summary", "");
 
 $hashrate = $return['SUMMARY'][0]['MHSav'];
 
-if ($settings['hashWarn'] == 0 and $settings['miningExpHash'] > $hashrate and $settings['donateActive'] == 0) {
+
+//if ($settings['hashWarn'] == 0 and $settings['miningExpHash'] > $hashrate and $settings['donateActive'] == 0) {
+if ($settings['hashWarn'] == 0 and $settings['miningExpHash'] > $hashrate) {
 
 		// Send an email if the devices dont match and set the deviceWarn falt
 		
 		
-		$warning = "Scripta notification: " . $settings['alertDevice'] . ": Unexpected hashrate " . $hashrate . " MH/s (Expected " . $settings['miningExpHash'] . " MH/s)";
+		$warning = "Baikal notification: " . $settings['alertDevice'] . ": Unexpected hashrate " . $hashrate . " MH/s (Expected " . $settings['miningExpHash'] . " MH/s)";
 		
 		sendEmail($settings, $warning, $warning);
 

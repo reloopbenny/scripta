@@ -1,148 +1,181 @@
-<?php
+﻿<?php
 session_start();
-if ( !isset($_SESSION['_logged_']) || $_SESSION['_logged_'] === false ) {
-		header('Location: login.php');
-        die();
+if (!isset($_SESSION['_logged_']) || $_SESSION['_logged_'] === false) {
+    header('Location: login.php');
+    die();
 }
-
 ?>
 
 <DOCTYPE html>
 <html lang="en" ng-app="Scripta">
-<head> 
-  <meta charset="utf-8">
-  <title>Scr|pta</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico" />
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.no-icons.min.css" rel="stylesheet">
-  <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet"> 
-  <!-- <link href="css/bootstrap.no-icons.min.css" rel="stylesheet">
-  <link href="css/font-awesome.min.css" rel="stylesheet"> -->
-  <link href="css/theme.css" rel="stylesheet">
-  <link href="css/alertify.css" rel="stylesheet">
-  <link href='https://fonts.googleapis.com/css?family=News+Cycle:400,700' rel='stylesheet' type='text/css'>
-  <link href="css/custom.css" rel="stylesheet">
+<head>
+    <meta charset="utf-8">
+    <title>Scr|pta</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/shellinabox.css">
+
+    <link href="css/custom.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/skins/skin-blue.min.css">
+
+    <!-- <link href="css/bootstrap.no-icons.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet"> -->
+    <link href="css/theme.css" rel="stylesheet">
+    <link href="css/alertify.css" rel="stylesheet">
+    <link href='css/css.css' rel="stylesheet" type='text/css'>
 </head>
-<body ng-controller="CtrlMain">
-  <header class="navbar navbar-static-top navbar-default scripta-trigger" role="banner">
-    <div class="container">
-      <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a ng-href="#/status" class="navbar-brand">
-        	<img alt="scripta" src="img/scripta-logo-ext-152.png">
-        </a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li menu-active>
-            <a ng-href="#/status">
-              <b>{{title}}</b>
-            </a>
-          </li>
-          <li menu-active><a ng-href="#/miner">Miner</a></li>
-          <li menu-active><a ng-href="#/settings">Settings</a></li>
-          <li menu-active><a ng-href="#/backup">Backup</a></li>
-        </ul>
-        <div class="navbar-nav navbar-right">
 
-          <span class="navbar-text scripta-more">{{counter}}s</span>
-          <button class="btn btn-danger navbar-btn ng-cloak" ng-show="downNow" title="Hopefully it's restarting">
-            {{downTime}}s downtime
-          </button>
-          <button class="btn btn-default navbar-btn" ng-click="tick(1,1)" title="Auto refresh in {{counter}}s">
-            <i class="icon-refresh" ng-class="{'icon-spin':counter<2}"></i>
-          </button>
-			<button class="btn btn-default navbar-btn"  title="Logoout" onclick="location.href='f_logout.php'">
-           Logout
-          </button> 
+
+<body class="hold-transition skin-blue layout-top-nav" ng-controller="CtrlMain">
+<header class="main-header scripta-trigger">
+    <nav class="navbar navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="index.php" class="navbar-brand"><b>Baikal</b>Miner</a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse">
+                <i class="fa fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav">
+
+                    <li menu-active>
+                        <a ng-href="#/status">
+                        <b>{{title}}</b>
+                        </a>
+                    </li>
+                    <li menu-active><a ng-href="#/miner">Miner</a></li>
+                    <li menu-active><a ng-href="#/settings">Settings</a></li>
+                    <li menu-active><a ng-href="#/backup">Backup</a></li>
+                    <li menu-active><a ng-href="#/terminal">Terminal</a></li>
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+
+                    <span class="navbar-text scripta-more">{{counter}}s</span>
+
+                    <button class="btn btn-danger btn-flat navbar-btn ng-cloak" ng-show="downNow"
+                        title="Hopefully it's restarting">
+                    {{downTime}}s downtime
+                    </button>
+
+                    <button class="btn btn-primary btn-flat navbar-btn" ng-click="tick(1,1)"
+                        title="Auto refresh in {{counter}}s">
+                    <i class="fa fa-refresh " ng-class="{'fa-spin':counter<2}"></i>
+                    </button>
+
+                    <button class="btn btn-primary btn-flat navbar-btn" title="Logoout"
+                        onclick="location.href='f_logout.php'">
+                    Logout
+                    </button>
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
         </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="container" ng-class="{down:status.minerDown}">
+        <!-- /.container-fluid -->
+    </nav>
+</header>
+<div class="container" ng-class="{down:status.minerDown}">
     <div ng-view>
-      <h1 class="text-center">
+        <h1 class="text-center">
         Loading angular.js the first time might take some seconds... Hang tight!
-      </h1>
+        </h1>
     </div>
-  </div>
+</div>
 
-  <footer>
+<footer>
     <div class="container">
-      <hr />
-      <p>
+        <hr/>
+        <p>
         <span class="pull-right">
-          Miner {{status.uptime|duration}}
-          &nbsp;-&nbsp;
-          Pi {{status.pi.uptime|duration}}
-          &nbsp;-&nbsp;
-          Temp {{status.pi.temp}} °C
-          &nbsp;-&nbsp;
-          Load {{status.pi.load|number:2}}
+        Miner {{status.uptime|duration}} &nbsp;-&nbsp; Pi {{status.pi.uptime|duration}} &nbsp;-&nbsp; Temp
+        {{status.pi.temp}}°C &nbsp;-&nbsp; Load {{status.pi.load|number:2}}
         </span>
-        <a href='http://www.lateralfactory.com/scripta/'>Scripta</a>, by <a href='http://www.lateralfactory.com'>Lateral Factory</a> under GPLv3 License
-      </p>
-<!-- LTC Donations welcome : Lcb3cy5nPnh3pQWPCpa55Zg8ShZj5kUHYC -->	
+        <a href='http://www.lateralfactory.com/scripta/'>Scripta</a>, by <a href='http://www.lateralfactory.com'>Lateral
+        Factory</a> under GPLv3 License
+        </p>
+        <!-- LTC Donations welcome : Lcb3cy5nPnh3pQWPCpa55Zg8ShZj5kUHYC -->
     </div>
-  </footer>
-  <script src="js/alertify.min.js"></script>
-  <script src="js/jquery.min.js"></script>
-  <script src="js/highcharts.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/angular.min.js"></script>
+</footer>
+<script src="js/alertify.min.js">
+</script>
+<script src="js/jquery.min.js">
+</script>
+<script src="js/highcharts.js">
+</script>
+<script src="js/bootstrap.min.js">
+</script>
+<script src="js/angular.min.js">
+</script>
+<script src="js/app.min.js">
+</script>
 
-  <script src="ng/app.js"></script>
-  <script src="ng/services.js"></script>
-  <script src="ng/controllers.js"></script>
-  <script src="ng/filters.js"></script>
-  <script src="ng/directives.js"></script>
-  <script>
-	$(document).ready(function() {
-		
-		$.ajax({
-			type: "POST",
-			url: "update/ctrl.php",
-			success: function(returnMessage) {
-				if (returnMessage != 0) {  
-					var r=confirm(returnMessage);
-					if (r==true) {
-						$.ajax({
-							type: "POST",
-							url: "update/start.php",
-							success: function(returnMessage) {
-								alert(returnMessage);
-								window.location = "index.php";
-							}
-						});
-					}
-				}
-			},
-			error: function(returnMessage) {
-				alert("Error");	
-				window.location = "index.php";
-			}
-		});
-	
+<script src="ng/app.js">
+</script>
+<script src="ng/services.js">
+</script>
+<script src="ng/controllers.js">
+</script>
+<script src="ng/filters.js">
+</script>
+<script src="ng/directives.js">
+</script>
+<script>
+    $(document).ready(function() {
 
- 	});
-
-	function ctrl_host(cmd) {
-		var retVal = prompt("Enter root password : ", "");
-                if ( retVal === '' ) Alert("Password required!");
-                else {
-                        $.get('f_hostHardCtl.php?command='+cmd+'&pass='+retVal, function(data) {
-              
-				alert('msg: '+data);
-                        });
+            $.ajax( {
+                type: "POST",
+                url: "update/ctrl.php",
+                success: function(returnMessage) {
+                    if (returnMessage != 0) {
+                        var r = confirm(returnMessage);
+                        if (r == true) {
+                            $.ajax( {
+                                type: "POST",
+                                url: "update/start.php",
+                                success: function(returnMessage) {
+                                    alert(returnMessage);
+                                    window.location = "index.php";
+                                }
+                            });
+                        }
+                    }
+                },
+                error: function(returnMessage) {
+                    alert("Error");
+                    window.location = "index.php";
                 }
-	}
-  </script>
+            });
+
+
+        });
+
+    function ctrl_host(cmd) {
+        var retVal = prompt("Enter password : ", "");
+        if (retVal == null) Alert("Password required!");
+        else {
+            $.get('f_hostHardCtl.php?command=' + cmd + '&pass=' + retVal, function(data) {
+
+                    alert('msg: ' + data);
+                });
+        }
+    }
+
+    function open_terminal() {
+	url='http://'+location.host+':4200';
+	window.open(url);
+
+    }
+</script>
 </body>
 </html>

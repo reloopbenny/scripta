@@ -19,11 +19,10 @@ if ( isset( $_POST['userPassword'] ) and !empty( $_POST['userPassword'] ) )  {
 	if ( $data[1] == $pwd ) {
 		
 		$_SESSION['_logged_'] = true;
-		
+		exec("curl -sSfk http://127.0.0.1/f_graph.php");		
 		echo 1;
 	}
-	else  {
-		
+	else  {		
 		echo 0;
 	 }
 }

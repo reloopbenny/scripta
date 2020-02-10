@@ -1,15 +1,14 @@
 #!/usr/bin/php
 <?php
 
-
-include('inc/miner.inc.php');
+include('inc/cgminer.inc.php');
 include('inc/settings.inc.php');
 include('inc/functions.inc.php');
 
 
-$stats = bfgminer("devs", "");
-$devs = $stats['DEVS'];
+$stats = cgminer("devs", "");
 
+$devs = $stats["data"]["DEVS"];
 $devcount = deviceCount($devs);
 
 
@@ -31,7 +30,7 @@ if ($settings['alertEnable']) {
 
 		// Send an email if the devices dont match and set the deviceWarn falt
 
-		$message = "Scripta notification: " . $settings['alertDevice'] . ": Unexpected device count " . $devcount . " (Expected " . $settings['miningExpDev'] . ")";
+		$message = "Baikal device count notification: " . $settings['alertDevice'] . ": Unexpected device count " . $devcount . " (Expected " . $settings['miningExpDev'] . ")";
 
 		sendEmail($settings, $message, $message);
 
@@ -45,7 +44,7 @@ if ($settings['alertEnable']) {
 
 	if($settings['devicesWarn'] == 1 and $settings['miningExpDev'] == $devcount) {
 
-		$message = "Scripta notification: " . $settings['alertDevice'] . ": Unexpected device count recovered";
+		$message = "Baikal device  notification: " . $settings['alertDevice'] . ": device count recovered";
 
 		sendEmail($settings, $message, $message);
 
@@ -56,12 +55,11 @@ if ($settings['alertEnable']) {
 	}
 
 }
-var_dump($settings);
+//var_dump($settings);
 
 function deviceCount($devs) {
 
 	$devices = 0;
-
 	foreach ($devs as $dev) {
 		if ($dev['MHS5s'] > 0) {
 			$devices++;
@@ -71,3 +69,4 @@ function deviceCount($devs) {
 	return $devices;
 
 }
+

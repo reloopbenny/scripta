@@ -7,25 +7,43 @@
     <!-- </p> -->
 
 
-    <h4>Available pools</h4>
+    <h3>Available pools</h3>
+    <h4>Dash Pools</h4>
     <p class="help-block" ng-show="settings.userHelp">
       Click to add pool to pool's list
     </p>
-    <div class="list-group">
-        <a href="" ng-click="poolAdd({url:'coinotron.com:3334',pass:' '})" class="list-group-item">Coinotron</a>
-        <a href="" ng-click="poolAdd({url:'ltc-eu.give-me-coins.com:3333'})" class="list-group-item">GiveMeCoins (EU)</a>  
-        <a href="" ng-click="poolAdd({url:'ltc-eu.give-me-coins.com:3333'})" class="list-group-item">GiveMeCoins (EU)</a>
-        <a href="" ng-click="poolAdd({url:'stratum+tcp://litecoinpool.org:3333'})" class="list-group-item">Litecoinpool - London (UK)</a>
-        <a href="" ng-click="poolAdd({url:'stratum+tcp://us.litecoinpool.org:3333'})" class="list-group-item">Litecoinpool - New York (USA)</a>
-        <a href="" ng-click="poolAdd({url:'stratum+tcp://eu-1.liteguardian.com:3334'})" class="list-group-item">Liteguardian (EU)</a>
-        <a href="" ng-click="poolAdd({url:'stratum+tcp://usa-1.liteguardian.com:3334'})" class="list-group-item">Liteguardian (USA)</a>
-        <a href="" ng-click="poolAdd({url:'stratum+tcp://global.wemineltc.com:3335'})" class="list-group-item">WeMineLTC</a>
-        <a href="" ng-click="poolAdd({url:'stratum+tcp://usa.wemineltc.com:3336'})" class="list-group-item">WeMineLTC (USA)</a>
-        <a href="" ng-click="poolAdd({url:'stratum+tcp://stratum.scryptguild.com:3333'})" class="list-group-item">ScryptGuild</a>
-        <a href="" ng-click="poolAdd({url:'stratum+tcp://us.ltcrabbit.com:3334'})" class="list-group-item">LTCRabbit</a>        
+    
+  	<div class="list-group">
+        <a href="" ng-click="poolAdd({url:'stratum+tcp://dash01.p2poolmining.us:7903',pass:'x',priority:'0',algo:'x11'})" class="list-group-item">Dash P2Pool</a>        
+        <a href="" ng-click="poolAdd({url:'stratum+tcp://dash.suprnova.cc:9995',pass:'x',priority:'0',algo:'x11'})" class="list-group-item">SuprNova</a>
+        <a href="" ng-click="poolAdd({url:'stratum+tcp://dash.coinmine.pl:6099',pass:'x',priority:'0',algo:'x11'})" class="list-group-item">Coinmine</a>
     </div>
+    <h4>Multi Pools</h4>
+    <p class="help-block" ng-show="settings.userHelp">
+      Click to add pool to pool's list
+    </p>
+
+    <div class="list-group">
+        <a href="" ng-click="poolAdd({url:'stratum+tcp://x11.hk.nicehash.com:3336',pass:'x',priority:'0',algo:'x11',extranonce:true});
+			     poolAdd({url:'stratum+tcp://quark.hk.nicehash.com:3345',pass:'x',priority:'1',algo:'quark',extranonce:true});
+			     poolAdd({url:'stratum+tcp://qubit.hk.nicehash.com:3344',pass:'x',priority:'2',algo:'qubit',extranonce:true});
+        " class="list-group-item">NiceHash</a>
+        <a href="" ng-click="poolAdd({url:'stratum+tcp://hub.miningpoolhub.com:17007',pass:'x',priority:'0',algo:'x11'});
+	                     poolAdd({url:'stratum+tcp://hub.miningpoolhub.com:17014',pass:'x',priority:'1',algo:'qubit'});
+        	             poolAdd({url:'stratum+tcp://hub.miningpoolhub.com:17016',pass:'x',priority:'2',algo:'skein'});
+        	             poolAdd({url:'stratum+tcp://hub.miningpoolhub.com:17005',pass:'x',priority:'3',algo:'myr-gr'});
+          " class="list-group-item">MiningPoolHub</a>
+        <a href="" ng-click="poolAdd({url:'stratum+tcp://x11.mine.zpool.ca:3533',pass:'x',algo:'x11',priority:'0',extranonce:true});
+                             poolAdd({url:'stratum+tcp://quark.mine.zpool.ca:4033',pass:'x',algo:'quark',priority:'1',extranonce:true});
+                             poolAdd({url:'stratum+tcp://qubit.mine.zpool.ca:4733',pass:'x',algo:'qubit',priority:'2',extranonce:true});
+                             poolAdd({url:'stratum+tcp://skein.mine.zpool.ca:4933',pass:'x',algo:'skein',priority:'3',extranonce:true});;
+                             poolAdd({url:'stratum+tcp://myr-gr.mine.zpool.ca:5433',pass:'x',algo:'myr-gr',priority:'4',extranonce:true});
+        " class="list-group-item">ZPool</a>
+    </div>
+    
   </div>
-  <div class="col-sm-9 col-md-8 pull-right">
+    
+  <div class="col-sm-12 col-md-9 pull-right">
 		<div class="clearfix">
 			<div class="pull-right">
 				<br />
@@ -36,74 +54,107 @@
 					Ordered from gentle to rough.
 				</p>
 				<div class="list-group" ng-show="minerRestart">
-					<a title="Reset miner" href="" ng-click="bfgminer('restart')" class="list-group-item">Reset</a>
-					<a title="Start miner" href="" ng-click="bfgminerHardCtl('1')" class="list-group-item">Start</a>
-					<a title="Stop miner" href="" ng-click="bfgminerHardCtl('0')" class="list-group-item">Stop</a>
-					<a title="Shutdown your PI (be careful!)" href="" id="link_shutdown" onclick="ctrl_host(1)" class="list-group-item">Shutdown</a>
-					<a title="Reboot your PI" href="" id="link_reboot"  onclick="ctrl_host(0)" class="list-group-item">Reboot</a>
+					<a title="Reset miner" href="" ng-click="cgminer('restart')" class="list-group-item">Cgminer soft reset (RPC)</a>
+					<!--<a title="Start miner" href="" ng-click="cgminerHardCtl('1')" class="list-group-item">Start</a> -->
+					<a title="Restart miner" href="" ng-click="cgminerHardCtl('0')" class="list-group-item">Restart cgminer linux process(30s)</a>
+					<!--<a title="Shutdown your PI (be careful!)" href="" id="link_shutdown" onclick="ctrl_host(1)" class="list-group-item">Shutdown</a> -->
+					<!--<a title="Reboot your PI" href="" id="link_reboot"  onclick="ctrl_host(0)" class="list-group-item">Reboot</a> -->
 				</div>
 			</div>
 		</div>
 
     <h3>Pools</h3>
+
     <p class="help-block" ng-show="settings.userHelp">
       The settings below serve as direct input to the miner. <strong>One little error can and will let the miner crash.</strong>
     </p>
     <form name="poolForm" class="form-horizontal">
       <div class="row">
-        <label class="col-sm-5">URL</label>
-        <label class="col-sm-3">Username</label>
-        <label class="col-sm-2">Password</label>
-        <label class="col-sm-2">Priority</label>
+        <label class="col-sm-4">URL</label>
+        <label class="col-sm-2">Algo</label>
+        <label class="col-sm-3">User</label>
+        <label class="col-sm-1">Pass</label>
+        <label class="col-sm-1">Extranonce</label>
+        <label class="col-sm-1">Priority</label>
       </div>
       <div class="form-group" ng-repeat="pool in pools">
-        <div class="col-sm-5">
+        <div class="col-sm-4">
           <input type="text" ng-model="pool.url" class="form-control" required>
         </div>
+        
+        <div class="col-sm-2">        	
+  					<select class="form-control" ng-model="pool.algo" required>
+    					<option>x11</option>    					
+    					<option>quark</option>
+    					<option>qubit</option>    					
+    					<option>skein</option>
+    					<option>myr-gr</option>    					
+  					</select>					
+      	</div>
+        
         <div class="col-sm-3">
           <input type="text" ng-model="pool.user" class="form-control" required>
         </div>
-        <div class="col-sm-2">
+      <div class="col-sm-1">
           <input type="text" ng-model="pool.pass" class="form-control" required>
-        </div>
-        <div class="col-sm-2">
+      </div>
+
+      <div class="col-sm-1">
+	<div class="checkbox">
+		<label><input type="checkbox" ng-model="pool.extranonce" value="true">Yes</label>
+	</div>
+      </div>
+
+        <div class="col-sm-1">
           <div class="input-group">
-            <input type="text" ng-model="pool.prio" class="form-control" required>
+            <input type="text" ng-model="pool.priority" class="form-control" required>
             <div class="input-group-btn">
               <button type="button" ng-click="poolRemove($index)" class="btn btn-default pull-right">&times;</button>
             </div>
+
           </div>
         </div>
+
       </div>
       <button type="button" class="btn btn-default" ng-click="poolBack()">Reload pools</button>
       <button type="button" class="btn btn-default" ng-click="poolAdd()">Add pool</button>
       <button type="button" ng-show="poolForm.$dirty && poolForm.$valid" class="btn btn-success" ng-click="poolSave()">Save pools</button>
     </form>
 
-    <h3>Options <small><a href="https://github.com/ckolivas/cgminer#readme">more info on GitHub</a><a href="https://github.com/dtbartle/cgminer-gc3355">  (gc3355)</a></small></h3>
 
-    <form name="optionForm" class="form-horizontal optionform">
-      <div class="row">
-        <label class="col-sm-6 col-xs-6">Option</label>
-        <label class="col-sm-6 col-xs-6">Info</label>
-      </div>
-      <div class="form-group" ng-repeat="o in options">
-        <div class="col-sm-6 col-xs-6">
-          <input type="text" ng-model="o.key" class="form-control" required />
-        </div>
-        <div class="col-sm-6 col-xs-6">
-          <div class="input-group">
-            <input type="text" ng-model="o.value" class="form-control" required />
-            <div class="input-group-btn">
-              <button type="button" ng-click="optionRemove($index)" class="btn btn-default">&times;</button>
-            </div>
+
+      <h3>SGMINER Options</h3>
+      <label>Options <a href="https://github.com/sgminer-dev/sgminer">SGMINER's Github page</a> for the following options</label>
+      <form name="optionForm" class="form-horizontal">
+          <div class="row">
+              <label class="col-sm-3">Sgminer options</label>
+              <label class="col-sm-4">Value</label>
+              <label class="col-sm-2">Description</label>
+
           </div>
-        </div>
-      </div>
-      <button type="button" class="btn btn-default" ng-click="optionBack()">Reload options</button>
-      <button type="button" class="btn btn-default" ng-click="optionAdd()">Add option</button>
-      <button type="button" ng-show="optionForm.$dirty && optionForm.$valid" class="btn btn-success" ng-click="optionSave()">Save config</button>
-    </form>
-  </div>
+          <div class="form-group" ng-repeat="option in options">
+              <!--<div  ng-show="option.key.indexOf('api')==-1"> -->
+              <div class="col-sm-2"  >
+                  <input type="text" ng-model="option.key" class="form-control" required>
+              </div>
+              <div class="col-sm-3"  >
+                  <div class="input-group">
+                  <input type="text" ng-model="option.value" class="form-control" required>
+                  <div class="input-group-btn">
+                      <button type="button" ng-click="optionRemove($index)" title="We suggest you backup before make any changes." class="btn btn-default pull-right">&times;</button>
+                  </div>
+                  </div>
 
-</divdadas
+              </div>
+              <div class="col-sm-6">
+                  <input type="text"  class="form-control" ng-model="option.description"  >
+              </div>
+
+          </div>
+          <button type="button" class="btn btn-default" ng-click="optionBack()">Reload Options</button>
+          <button type="button" class="btn btn-default" ng-click="optionAdd({'key':'x'})">Add Options</button>
+          <button type="button" ng-show="optionForm.$dirty && optionForm.$valid" class="btn btn-success" ng-click="optionSave()">Save Options</button>
+      </form>
+
+  </div>
+</div>

@@ -12,16 +12,17 @@ returns success, command, miner response and possible errors
 */
 header('Content-type: application/json');
 
-include('inc/bfgminer.inc.php');
+include('inc/cgminer.inc.php');
 
 if (empty($_REQUEST['command']) && empty($_REQUEST['parameter'])) {
-  $r = bfgminer();
+  $r = cgminer();
 }
 elseif(empty($_REQUEST['parameter'])){
-  $r = bfgminer($_REQUEST['command']);
+  $r = cgminer($_REQUEST['command']);
 }
 else{
-  $r = bfgminer($_REQUEST['command'],$_REQUEST['parameter']);
+
+  $r = cgminer($_REQUEST['command'],$_REQUEST['parameter']);
 }
 
 echo json_encode($r);

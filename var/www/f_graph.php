@@ -1,11 +1,11 @@
 <?php
 session_start();
-if ( !isset($_SESSION['_logged_']) || $_SESSION['_logged_'] === false ) {
+if ( "127.0.0.1"!=$_SERVER['REMOTE_ADDR'] && (!isset($_SESSION['_logged_']) || $_SESSION['_logged_'] === false) ) {
         echo json_encode(false);
         die();
 }
 
-require('inc/bfgminer.inc.php');
+require('inc/miner.inc.php');
 include('inc/settings.inc.php');
 
 $ret =  create_graph('mhsav-hour.png', '-1h', 'Last Hour')

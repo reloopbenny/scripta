@@ -11,20 +11,33 @@ returns success, status data and errors
 */
 header('Content-type: application/json');
 
-include('inc/bfgminer.inc.php');
-include('inc/ChromePhp.php');
+include('inc/cgminer.inc.php');
 
 // Miner data
-//$r['summary'] = miner('summary', '')['SUMMARY'];
-$devs=bfgminer('devs');
-$pools=bfgminer('pools');
+//$r['summary'] = cgminer('summary', '')['SUMMARY'];
+$devs=cgminer('devs');
+$pools=cgminer('pools');
+$stats=cgminer('stats');
 
 if(!empty($devs['data']['DEVS'])){
-  $r['status']['devs'] = $devs['data']['DEVS'];
+ //$r['status']['devs'] = $devs['data']['DEVS'];
+  foreach ($devs['data']['DEVS'] as $id => $vdev) {
+        if($vdev['Enabled'] == 'Y') {
+          $r['status']['devs'][$id] = $vdev;
+        }
+  }
+
+  foreach ($r['status']['devs'] as $id => $dev) {
+      //var_dump($stats['data']['STATS'][$id]["TEMP(AVG)"]);  
+      $r['status']['devs'][$id]['Chips']=$stats['data']['STATS'][$id]["ChipCount"];
+      $r['status']['devs'][$id]['Clock']=$stats['data']['STATS'][$id]["Clock"];
+      $r['status']['devs'][$id]['Algo']=$stats['data']['STATS'][$id]["Algo"];
+  }
 }
 else{
   $r['status']['devs'] = array();
 }
+
 if(!empty($pools['data']['POOLS'])){
   $r['status']['pools'] = $pools['data']['POOLS'];
   $r['status']['minerUp'] = true;
@@ -54,25 +67,33 @@ $Rejected = 0;
 $HardwareErrors = 0;
 $Utility = 0;
 
-ChromePhp::log($r['status']);
-
 if(!empty($r['status']['devs'])){
   foreach ($r['status']['devs'] as $id => $dev) {
-    $devices += $dev['MHS5s']>0?1:0; // Only count hashing devices
-    $MHS5s += $dev['MHS5s'];
-    $MHSav += $dev['MHSav'];
-    $Accepted += $dev['Accepted'];
-    $Rejected += $dev['Rejected'];
-    $HardwareErrors += $dev['HardwareErrors'];
-    $Utility += $dev['Utility'];
-    $r['status']['devs'][$id]['TotalShares']=$dev['Accepted']+$dev['Rejected']+$dev['HardwareErrors'];
+    if(($dev['Enabled'] == 'Y')) {
+        $devices += $dev['MHS5s']>0?1:0; // Only count hashing devices
+        $MHS5s += $dev['MHS5s'];
+        $MHSav += $dev['MHSav'];
+        $Accepted += $dev['Accepted'];
+        $Rejected += $dev['Rejected'];
+        $HardwareErrors += $dev['HardwareErrors'];
+        $Utility += $dev['Utility'];
+        $r['status']['devs'][$id]['TotalShares']=$dev['Accepted']+$dev['Rejected']+$dev['HardwareErrors'];
+    }
   }
 }
+
+
+$ret = explode(' ',$MHS5s);
+$KHS5s = ($ret[0]/1024). " Kh/s";
+$ret = explode(' ',$MHSav);
+$KHSav = ($ret[0]/1024). " Kh/s";
 
 $r['status']['dtot']=array(
   'devices'=>$devices,
   'MHS5s'=>$MHS5s,
   'MHSav'=>$MHSav,
+  'KHS5s'=>$KHS5s,
+  'KHSav'=>$KHSav,
   'Accepted'=>$Accepted,
   'Rejected'=>$Rejected,
   'HardwareErrors'=>$HardwareErrors,
@@ -85,10 +106,10 @@ if(!empty($_REQUEST['all'])){
   $r['status']['pi']['load'] = $ret[2];
   $ret = explode(' ', exec('cat /proc/uptime'));
   $r['status']['pi']['uptime'] = $ret[0];
-  $r['status']['pi']['temp'] = exec('cat /sys/class/thermal/thermal_zone0/temp')/1000;
+  $r['status']['pi']['temp'] = exec('cat /sys/class/thermal/thermal_zone0/temp');
 
   // What other interesting stuff is in summary?
-  $summary=bfgminer('summary');
+  $summary=cgminer('summary');
   if(!empty($summary['data']['SUMMARY'][0]['Elapsed'])){
     $r['status']['uptime'] = $summary['data']['SUMMARY'][0]['Elapsed'];
   }
@@ -98,8 +119,6 @@ if(!empty($_REQUEST['all'])){
 }
 
 $r['status']['time'] = time();
-
-//ChromePhp::log($r);
 
 echo json_encode($r);
 ?>

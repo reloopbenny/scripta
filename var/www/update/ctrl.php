@@ -1,7 +1,7 @@
 <?php 
 require('version.php');
 require('update.php');
-
+/*
 $update = new AutoUpdate(true);
 $update->currentVersionName = CURRENT_VERSION_NAME;
 $update->currentVersion = CURRENT_VERSION; 
@@ -23,5 +23,5 @@ if ($latest !== false) {
 else {
 	echo $update->getLastError();
 }
-
+*/
 ?>

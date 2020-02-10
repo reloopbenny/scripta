@@ -1,0 +1,42 @@
+[
+    {
+        "url": "stratum+tcp://x11.mine.zpool.ca:3533",
+        "pass": "x11=8,quark=8,qubit=8,skein=4,myr-gr=8",
+        "priority": "0",
+        "algo": "x11",
+        "extranonce": "true",
+        "user": "16DB6H9VBijZ27Fca8ZCSM5NH1Vt6CdVVA"
+    },
+    {
+        "url": "stratum+tcp://quark.mine.zpool.ca:4033",
+        "pass": "x11=8,quark=8,qubit=8,skein=4,myr-gr=8",
+        "priority": "1",
+        "algo": "quark",
+        "extranonce": "true",
+        "user": "16DB6H9VBijZ27Fca8ZCSM5NH1Vt6CdVVA"
+    },
+    {
+        "url": "stratum+tcp://qubit.mine.zpool.ca:4733",
+        "pass": "x11=8,quark=8,qubit=8,skein=4,myr-gr=8",
+        "priority": "2",
+        "algo": "qubit",
+        "extranonce": "true",
+        "user": "16DB6H9VBijZ27Fca8ZCSM5NH1Vt6CdVVA"
+    },
+    {
+        "url": "stratum+tcp://skein.mine.zpool.ca:4933",
+        "pass": "x11=8,quark=8,qubit=8,skein=4,myr-gr=8",
+        "priority": "3",
+        "algo": "skein",
+        "extranonce": "true",
+        "user": "16DB6H9VBijZ27Fca8ZCSM5NH1Vt6CdVVA"
+    },
+    {
+        "url": "stratum+tcp://myr-gr.mine.zpool.ca:5433",
+        "pass": "x11=8,quark=8,qubit=8,skein=4,myr-gr=8",
+        "priority": "4",
+        "algo": "myr-gr",
+        "extranonce": "true",
+        "user": "16DB6H9VBijZ27Fca8ZCSM5NH1Vt6CdVVA"
+    }
+]

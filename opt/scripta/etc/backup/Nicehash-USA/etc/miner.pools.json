@@ -1,0 +1,26 @@
+[
+    {
+        "url": "stratum+tcp://x11.us.nicehash.com:3336",
+        "pass": "x",
+        "priority": "0",
+        "algo": "x11",
+        "extranonce": "true",
+        "user": "16DB6H9VBijZ27Fca8ZCSM5NH1Vt6CdVVA"
+    },
+    {
+        "url": "stratum+tcp://quark.us.nicehash.com:3345",
+        "pass": "x",
+        "priority": "1",
+        "algo": "quark",
+        "extranonce": "true",
+        "user": "16DB6H9VBijZ27Fca8ZCSM5NH1Vt6CdVVA"
+    },
+    {
+        "url": "stratum+tcp://qubit.us.nicehash.com:3344",
+        "pass": "x",
+        "priority": "2",
+        "algo": "qubit",
+        "extranonce": "true",
+        "user": "16DB6H9VBijZ27Fca8ZCSM5NH1Vt6CdVVA"
+    }
+]
